@@ -1,52 +1,60 @@
 var ask = require("readline-sync");
 
-// 1 ask questio
+// If the user enters an invalid character, print: "That is not a valid operation" and then restart the program
+// After the user enters a valid operation, ask the user, "Please enter the first number"
+// The user then enters the first number. If the user enters something that is not a number, print: “This is not a number” and then re-ask the question
+// After a valid number is entered, ask the user, "Please enter the second number". Perform the same error handling as before
+// Then create a function to perform the proper math operation and print the result as: "The result is: X" where "X" is the actual result
 
-// ask whiich option he want to  do
-let question = "";
+// `What Operation would you like to perform Divide(/) - Mulitply(*) - Rest(-) or  Add(+) ? `;
 
-function perfomOperation(a, b, c) {
-  if (c === "/") {
-    return console.log(`The result is: ` + a / b);
-  }
-  if (c === "*") {
-    return console.log(`The result is: ` + a * b);
-  }
-  if (c === "+") {
-    return console.log(`The result is: ` + a + b);
-  }
-  if (c === "-") {
-    return console.log(`The result is: ` + a - b);
-  }
-}
+// Then the user enters one of these options: "/" "*" "-" "+"
+const arrOperations = {
+  "+": { name: "Add", exectution: (a, b) => a + b },
+  "-": { name: "Rest", exectution: (a, b) => a - b },
+  "*": { name: "Mulitply", exectution: (a, b) => a * b },
+  "/": { name: "Divide", exectution: (a, b) => a / b },
+};
 
-function operation() {
-  question = ask.question(
-    `What Operation would you like to perform Divide(/) - Mulitply(*) - Rest(-) or  Add(+) ? `
+// necesito preguntar
+
+const askOperation = (arrOperations) => {
+  const operationMessage = Object.entries(arrOperations)
+    .map(([key, item]) => {
+      return ` ${item.name} ${key} `;
+    })
+    .join(" ");
+
+  const operator = ask.question(
+    `What operation do you want to do ${operationMessage}?`
   );
+
+  if (!arrOperations[operator]) {
+    return (
+      console.log("That is not Avaible at the Moment "),
+      askOperation(arrOperations)
+    );
+  }
+  return operator;
+};
+
+const getInt = (secuence) => {
+  return ask.questionInt(`${secuence} Number:`, {
+    limitMessage: "This is not a valid number",
+  });
+};
+
+// Ask the user, "What operation would you like to perform?"
+// need to get the   numbers to pass  them
+function handleCalculator(obj) {
+  const isOperator = askOperation(obj);
+  const [firstNum, secondNum] = ["first", "second"].map((value) => {
+    return getInt(value);
+  });
+
+  const result = obj[isOperator].exectution(firstNum, secondNum);
+
+  return console.log(result);
 }
 
-while (
-  question != "/" &&
-  question != "+" &&
-  question != "-" &&
-  question != "*"
-) {
-  operation();
-}
-
-let question1 = ask.questionFloat("Place your first Number ");
-let question2 = ask.questionFloat("Place your second  Number ");
-
-// 2 if the user enter another  character what is not the one on the top
-//2.5 print that is not valid operation
-//3 then restart the program
-
-// 4 if yes  please enter the first number
-
-// 5 if the user  enter something not is a number print  "This is not a numbe" and re-ask the question
-
-// 6 please enter the second number
-
-// create a function to perform a proper math opetation and print the
-// result is X where X is the actual result
+handleCalculator(arrOperations);
