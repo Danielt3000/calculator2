@@ -39,7 +39,7 @@ const askOperation = (arrOperations) => {
 };
 
 const getInt = (secuence) => {
-  return ask.questionInt(`${secuence} Number:`, {
+  return ask.questionInt(`Please enter the ${secuence}  number`, {
     limitMessage: "This is not a valid number",
   });
 };
